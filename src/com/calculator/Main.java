@@ -1,6 +1,6 @@
-package com.calculadora;
+package com.calculator;
 
-import com.calculadora.ui.MainWindow;
+import com.calculator.ui.MainWindow;
 import javax.swing.SwingUtilities;
 
 public class Main {
