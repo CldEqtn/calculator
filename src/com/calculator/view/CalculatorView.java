@@ -1,24 +1,24 @@
 package com.calculator.view;
 
-import com.calculator.controller.MainController;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainWindow extends JFrame  {
-    private int width = 400;
-    private int height = 600;
+public class CalculatorView extends JFrame  {
+    private final int width = 400;
+    private final int height = 600;
 
-    private Font buttonsFont = new Font("Poppins",Font.PLAIN, 30);
-    private Font displayFont = buttonsFont.deriveFont(45f);
+    private final Font buttonsFont = new Font("Poppins",Font.PLAIN, 30);
+    private final Font displayFont = buttonsFont.deriveFont(45f);
 
+    JTextField display;
     JButton[][] buttons;
 
     JFrame frame = new JFrame("Calculator");
     JPanel panelDisplay = new JPanel(new BorderLayout());
     JPanel panelButtons = new JPanel(new GridLayout(5, 4));
 
-    public MainWindow(){
+    public CalculatorView(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(width,height);
         this.setTitle("Calculator");
@@ -34,23 +34,24 @@ public class MainWindow extends JFrame  {
     public void initializeComponents(){
         buttons = new JButton[5][4];
 
-
+        //
         // create the display
-        JTextField display = new JTextField();
+        display = new JTextField();
         panelDisplay.add(display, BorderLayout.CENTER);
-        panelDisplay.setPreferredSize(new Dimension(frame.getWidth(), height / 5)); // changes txtfield size
+        panelDisplay.setPreferredSize(new Dimension(frame.getWidth(), height / 5)); // changes textfield size
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setFont(displayFont);
-        //TODO: make the display change its size dynamically
+        //TODO: last - make the display change its size dynamically
 
+
+        //
         // create buttons with the matrix's strings
         String[][] buttonText = {
-                {"(", ")", "^", "+"},
-                {"7","8","9","-"},
-                {"4","5","6","*"},
+                {"(", ")", "C", "<-"},
+                {"7","8","9","+"},
+                {"4","5","6","-"},
                 {"1","2","3","/"},
-                {"0",".","C","="}};
-
+                {"0",".","*","="}};
 
         for(int i = 0; i < buttonText.length; i++){
             for (int j = 0; j < 4; j++) {
@@ -66,13 +67,18 @@ public class MainWindow extends JFrame  {
         this.add(panelButtons, BorderLayout.CENTER);
     }
 
+    // getters for MainController usage
     public JButton[][] getButtons() {
         return buttons;
     }
+    public JTextField getDisplay() {
+        return display;
+    }
 
+    // this method was made for legibility purposes
     private JButton createButton(String label) {
-        JButton btn = new JButton(label);
-        return btn;
+        return new JButton(label);
+
     }
 
 }
