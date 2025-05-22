@@ -1,10 +1,13 @@
 package com.calculator;
 
-import com.calculator.ui.MainWindow;
+import com.calculator.controller.MainController;
+import com.calculator.view.MainWindow;
 import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainWindow());
+        MainWindow window = new MainWindow();
+        SwingUtilities.invokeLater(() -> window.setVisible(true));
+        MainController controller = new MainController(window);
     }
 }
