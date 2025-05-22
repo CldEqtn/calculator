@@ -1,32 +1,107 @@
 package com.calculator.controller;
 
-import com.calculator.view.MainWindow;
+import com.calculator.view.CalculatorView;
 
 import javax.swing.*;
 
 public class MainController {
-    private final MainWindow window;
+    private final CalculatorView view;
+    JButton[][] buttons;
+    char lastChar = 0;
 
-    public MainController(MainWindow window) {
-        this.window = window;
+
+    public MainController(CalculatorView view) {
+        this.view = view;
         initializeListeners();
     }
 
-    public void initializeListeners(){
-        JButton[][] buttons = window.getButtons();
+    public String getCurrentDisplayText() {
+        return view.getDisplay().getText();
+    }
+    public JTextField getCurrentDisplay() {
+        return view.getDisplay();
+    }
 
-        for (int i = 0; i < buttons.length; i++) {
+
+    public void initializeListeners(){
+        // gets all buttons labels and calls "handleButtons" with its labels
+        buttons = view.getButtons();
+
+        // normal for   =====> for (   int    i = 0            :          array)
+        // enhanced for =====> for (DataType variable (will walk through) array)
+        for (JButton[] button : buttons) {
             for (int j = 0; j < 4; j++) {
-                String label = buttons[i][j].getText();
-                buttons[i][j].addActionListener(e -> handleButtons(label));
+                String label = button[j].getText();
+
+                button[j].addActionListener(e -> {
+                    handleButtons(label);
+                });
             }
         }
     }
+
+    // writes on the display and calls the "equals" method, that gives the result
     public void handleButtons(String label){
-        System.out.println("This is the button \""+ label +"\"");
+        String displayText = getCurrentDisplayText();
+        JTextField display = getCurrentDisplay();
+
+        if (!displayText.isEmpty())
+            lastChar = displayText.charAt(displayText.length() - 1);
+
+
+
+        System.out.println("This is the button '" + label + "'."); // for testing
+
+        // START OF SWITCH============
+        switch (label){
+            case "C":if (!displayText.isEmpty()) displayEraseAll(); break;
+
+            case "<-": if (!displayText.isEmpty()) displayBackspace(); break;
+
+            // if
+            case "+": case "-": case "*": case "/": case ".":
+                if (!lastCharIsNumber()) break;
+
+            //TODO: 2 - implement the method equals in this part after it's done
+//            case "=":
+//                equals(displayText);
+
+            default:
+                display.setText(displayText + label);
+
+            // END OF SWITCH============
+        }
 
     }
 
+    //
+    // erases the display
+    public void displayEraseAll(){
+        getCurrentDisplay().setText("");
+    }
+    // erases the last character
+    public void displayBackspace(){
+        getCurrentDisplay().setText(
+                getCurrentDisplayText().substring(0, getCurrentDisplayText().length() - 1)
+        );
+    }
 
+    //
+    // identifies the last pressed number, so the user don't add more than 1 operator or dot
+    public boolean lastCharIsNumber(){
+
+        char[] unrepeatable = {'+', '-', '*', '/', '.'};
+        for (char c : unrepeatable) {
+            if (lastChar == c) return false;
+        }
+
+        return true;
+    }
+
+    //TODO: 1 - create all the operations, so the equals method can be made
+//    public double equals(String expression){
+//
+//        return 0;
+//    }
 
 }
