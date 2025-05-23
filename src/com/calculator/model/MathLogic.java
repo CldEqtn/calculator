@@ -3,8 +3,6 @@ package com.calculator.model;
 import java.util.ArrayList;
 
 public class MathLogic {
-    private String results;
-
     private String operator;
 
     private int beforeOperatorIndex;
@@ -17,6 +15,9 @@ public class MathLogic {
 
 
     public String equalsTo(String expression){
+        String results = "";
+        //TODO: check for parenthesis first, then multiplication or division
+
         // separates everything around the operators
         expressionArray = expression.split("(?<=[+\\-*/()])|(?=[+\\-*/()])");
 
@@ -27,7 +28,9 @@ public class MathLogic {
         while (onGoingExpressionArrayList.contains("*") || onGoingExpressionArrayList.contains("/")){
             calculate("*/");
         }
-        calculate("+-");
+        while (onGoingExpressionArrayList.contains("+") || onGoingExpressionArrayList.contains("-")){
+            calculate("+-");
+        }
         System.out.println("size of arraylist is " + onGoingExpressionArrayList.size());
 
 
@@ -35,19 +38,13 @@ public class MathLogic {
             System.out.println(onGoingExpressionArrayList.get(i));
         }
 
-        //TODO: check for parenthesis first, then multiplication or division
-
-//        locateCalc("+");
-//        System.out.println( "The numbers are " +
-//                expressionArray[beforeOperatorIndex] + expressionArray[afterOperatorIndex] +
-//                "and its positions are " + beforeOperatorIndex + " and " + afterOperatorIndex
-//        );
 
         return results;
     }
 
     public double calculate(String operators){
-        double calculus = 0; // resets calculus
+        double calculus = 0;
+
 
         // finds the values around the chosen operator
         double value1 = Double.parseDouble(onGoingExpressionArrayList.get(locateCalc(operators) - 1));
@@ -96,9 +93,9 @@ public class MathLogic {
         }
 
         // will find the INDEX of the number before and after, so it can calculate later.
-        for (int i = 0; i < expressionArray.length; i++){
-            if (expressionArray[i].equals(operator1) || expressionArray[i].equals(operator2)){
-                operator = expressionArray[i];
+        for (int i = 0; i < onGoingExpressionArrayList.size(); i++){
+            if (onGoingExpressionArrayList.get(i).equals(operator1) || onGoingExpressionArrayList.get(i).equals(operator2)){
+                operator = onGoingExpressionArrayList.get(i);
 
                 operatorIndex = i;
 
