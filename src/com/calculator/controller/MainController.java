@@ -1,14 +1,16 @@
 package com.calculator.controller;
 
 import com.calculator.view.CalculatorView;
+import com.calculator.model.MathLogic;
 
 import javax.swing.*;
 
 public class MainController {
     private final CalculatorView view;
+    private final MathLogic mathLogic = new MathLogic();
+
     JButton[][] buttons;
     char lastChar = 0;
-
 
     public MainController(CalculatorView view) {
         this.view = view;
@@ -58,13 +60,15 @@ public class MainController {
 
             case "<-": if (!displayText.isEmpty()) displayBackspace(); break;
 
-            // if
             case "+": case "-": case "*": case "/": case ".":
-                if (!lastCharIsNumber()) break;
+                if (!lastCharIsNumber()) break; // if the last char is a number, break
+                display.setText(displayText + label); break; // if not, add it to the display, then break
 
-            //TODO: 2 - implement the method equals in this part after it's done
-//            case "=":
-//                equals(displayText);
+            //TODO: method equals
+            case "=":
+                System.out.println(displayText); // testing purposes
+                display.setText(mathLogic.equalsTo(displayText)); break;
+
 
             default:
                 display.setText(displayText + label);
@@ -97,11 +101,5 @@ public class MainController {
 
         return true;
     }
-
-    //TODO: 1 - create all the operations, so the equals method can be made
-//    public double equals(String expression){
-//
-//        return 0;
-//    }
 
 }
