@@ -56,15 +56,14 @@ public class MainController {
 
         // START OF SWITCH============
         switch (label){
-            case "C":if (!displayText.isEmpty()) displayEraseAll(); break;
+            case "C": if (!displayText.isEmpty()) eraseAll(); break;
 
-            case "<-": if (!displayText.isEmpty()) displayBackspace(); break;
+            case "<-": if (!displayText.isEmpty()) backspace(); break;
 
             case "+": case "-": case "*": case "/": case ".":
                 if (!lastCharIsNumber()) break; // if the last char is a number, break
                 display.setText(displayText + label); break; // if not, add it to the display, then break
 
-            //TODO: method equals
             case "=":
                 System.out.println(displayText); // testing purposes
                 display.setText(mathLogic.equalsTo(displayText)); break;
@@ -80,14 +79,17 @@ public class MainController {
 
     //
     // erases the display
-    public void displayEraseAll(){
+    public void eraseAll(){
         getCurrentDisplay().setText("");
+        for (int i = 0; i < mathLogic.getOnGoingExpression().size(); i++)
+            mathLogic.eraseLast();
     }
     // erases the last character
-    public void displayBackspace(){
+    public void backspace(){
         getCurrentDisplay().setText(
                 getCurrentDisplayText().substring(0, getCurrentDisplayText().length() - 1)
         );
+        mathLogic.eraseLast();
     }
 
     //
@@ -101,5 +103,7 @@ public class MainController {
 
         return true;
     }
+
+
 
 }
