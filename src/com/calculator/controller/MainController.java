@@ -52,7 +52,7 @@ public class MainController {
 
 
 
-        System.out.println("This is the button '" + label + "'."); // for testing
+        System.out.print(label + " "); // for testing
 
         // START OF SWITCH============
         switch (label){

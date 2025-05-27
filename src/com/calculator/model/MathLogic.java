@@ -8,13 +8,16 @@ import java.util.ArrayList;
 public class MathLogic {
     private String operator;
 
+    char lastChar = 0;
     private int operatorIndex;
 
     private String[] splitExpression;
     private ArrayList<String> onGoingExpression = new ArrayList<>();
     private ArrayList<String> expressionParentheses = new ArrayList<>();
 
+    // TODO: (12)2 -> multiplication
 
+    // TODO:
 
     public String equalsTo(String expression){
         String results = "";
@@ -31,9 +34,9 @@ public class MathLogic {
             System.out.println("Expression is valid");
             return expression;
         }
-        //TODO: check for parentheses first
         while (onGoingExpression.contains("(") && onGoingExpression.contains(")"))
             calculateParentheses();
+
 
 
         while (onGoingExpression.contains("*") || onGoingExpression.contains("/"))
@@ -42,7 +45,7 @@ public class MathLogic {
         while (onGoingExpression.contains("+") || onGoingExpression.contains("-"))
             calculate("+-", onGoingExpression);
 
-        System.out.println("size of arraylist is " + onGoingExpression.size());
+
 
         while (onGoingExpression.size() > 1)
             eraseLast();
@@ -74,10 +77,24 @@ public class MathLogic {
     public void calculateParentheses(){
         int parenthesesStart = onGoingExpression.indexOf("(");
         int parenthesesEnd = onGoingExpression.indexOf(")");
+
         int i = 0;
         for (i = parenthesesStart; i <= parenthesesEnd; i++) {
-            expressionParentheses.add(onGoingExpression.get(i)); //error: Index 3 out of bounds for length 2
+            expressionParentheses.add(onGoingExpression.get(i));
         }
+
+
+
+        // checks if there is a number before and after the parentheses without operators, (...)**
+        boolean numberBeforeParentheses = false;
+        if (!onGoingExpression.getFirst().equals("(") && parenthesesStart != 0)
+            numberBeforeParentheses = onGoingExpression.get(parenthesesStart - 1).matches("[0-9]");
+
+        boolean numberAfterParentheses = false;
+        if (onGoingExpression.size() > expressionParentheses.size() && parenthesesEnd != onGoingExpression.size() - 1)
+            numberAfterParentheses = onGoingExpression.get(parenthesesEnd + 1).matches("[0-9]");
+
+
         for (i = parenthesesEnd; i >= parenthesesStart; i--) {
             onGoingExpression.remove(i);
         }
@@ -89,12 +106,22 @@ public class MathLogic {
         calculate("+-", expressionParentheses);
 
         onGoingExpression.add(parenthesesStart, expressionParentheses.getFirst());
+
+
+        // **(...) and manually adds the multiplication operator, in case there is need.
+        if (onGoingExpression.size() - 1 > parenthesesEnd && numberAfterParentheses){
+            onGoingExpression.add(parenthesesEnd + 1, "*"); // TODO: FIX ERROR HERE (not removing parenthesis)
+        }
+
+        if (numberBeforeParentheses){
+            onGoingExpression.add(parenthesesStart, "*"); // TODO: FIX ERROR HERE (not removing parenthesis)
+        }
+
         expressionParentheses.clear();
     }
 
 
     public void calculate(String operators, ArrayList<String> expression){
-        //TODO: calculate from startIndex to endIndex
 
 
         int calculationMiddle = locateCalc(operators, expression);
@@ -138,11 +165,6 @@ public class MathLogic {
         expression.add(beforeOperatorIndex, String.valueOf(calculation));
     }
 
-    //TODO: make this work
-    public void eraseParentheses(){
-        expressionParentheses.removeFirst();
-        expressionParentheses.removeLast();
-    }
 
 
 
@@ -191,8 +213,6 @@ public class MathLogic {
         }
         return operatorIndex;
     }
-
-
 
     public ArrayList<String> getOnGoingExpression() {
         return onGoingExpression;
